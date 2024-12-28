@@ -10,7 +10,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ message, sender }) => {
     return (
         <div className="flex items-center my-3">
             <div className="mr-4">
-                {sender === "bot" ? <FaRobot /> : <FaUser />}
+                {sender === "assistant" ? <FaRobot /> : <FaUser />}
             </div>
             <div className={`p-2 rounded-md ${sender === "user" ? "bg-[#484848]" : "bg-transparent"}`}>
                 <ReactMarkdown>{message}</ReactMarkdown>

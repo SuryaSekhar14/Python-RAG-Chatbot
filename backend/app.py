@@ -64,28 +64,32 @@ def chat():
     data = request.json
     if not data or 'query' not in data:
         return jsonify({"error": "Missing 'query' in request body"}), 400
+    
+    # print(data)
 
     query = data['query']
     try:
-        message_history = data['message_history']
+        message_history = data['history']
     except KeyError:
         message_history = []
 
-    if vector_db is None:
-        return jsonify({"error": "Vector database is empty. Please upload files first."}), 400
+    if vector_db is not None:
+        results = vector_db.similarity_search(query, k=3)
+        context = " ".join([doc.page_content for doc in results])
+    else:
+        context = ""
 
-    results = vector_db.similarity_search(query, k=3)
-    context = " ".join([doc.page_content for doc in results])
-
-    print(context)
+    # print(context)
 
     def stream_response():
         try:
             messages = [
-                {"role": "system", "content": f"Use the following context for answering: {context}"}
-            ] + message_history + [
+                {"role": "system", "content": f"Use the following context for answering: {context}"},
+                {"role": "system", "content": f"You have access to the previous messages in this conversation, please use it when it is required: {str(message_history)}. Make sure to always align your answers with the context."},
                 {"role": "user", "content": query}
             ]
+
+            # print(messages)
 
             stream = client.chat.completions.create(
                 model="gpt-4o-mini",

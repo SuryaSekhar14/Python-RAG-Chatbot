@@ -15,7 +15,7 @@ const Toast: React.FC<ToastProps> = ({ message, type = 'info', duration = 3000 }
     }, duration);
 
     return () => clearTimeout(timer);
-  }, []);
+  });
 
   const toastClasses = `
     p-4

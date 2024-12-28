@@ -9,7 +9,7 @@ import { FaStopCircle } from "react-icons/fa";
 
 export default function Page() {
   const [message, setMessage] = useState("");
-  const [responseMessage, setResponseMessage] = useState("");
+  // const [responseMessage, setResponseMessage] = useState("");
   const [messageHistory, setMessageHistory] = useState<{ message: string; sender: string }[]>([]);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -41,10 +41,10 @@ export default function Page() {
         const { done, value } = await reader.read();
         if (done) break;
         result += decoder.decode(value, { stream: true });
-        setResponseMessage(result);
-        const responseMessage = { message: result, sender: "bot" };
+        // setResponseMessage(result);
+        const responseMessage = { message: result, sender: "assistant" };
         setMessageHistory((prev) => {
-          if (prev.length > 0 && prev[prev.length - 1].sender === "bot") {
+          if (prev.length > 0 && prev[prev.length - 1].sender === "assistant") {
             return [...prev.slice(0, -1), responseMessage];
           } else {
             return [...prev, responseMessage];
@@ -52,7 +52,7 @@ export default function Page() {
         });
       }
   
-      const finalResponseMessage = { message: result, sender: "bot" };
+      const finalResponseMessage = { message: result, sender: "assistant" };
       setMessageHistory((prev) => [...prev.slice(0, -1), finalResponseMessage]);
     } else {
       console.error("Failed to send message");
