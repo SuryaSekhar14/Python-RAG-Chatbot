@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ChatArea from "./components/ChatArea";
 import SideNav from "./components/SideNav";
 import MainNav from "./components/MainNav";
@@ -9,13 +9,18 @@ import { FaStopCircle } from "react-icons/fa";
 
 export default function Page() {
   const [message, setMessage] = useState("");
-  // const [responseMessage, setResponseMessage] = useState("");
   const [messageHistory, setMessageHistory] = useState<{ message: string; sender: string }[]>([]);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isInputDisabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isInputDisabled]);
 
   const handleSubmit = async () => {
-    // localStorage.setItem("timestamp", Date.now().toString());
     setIsInputDisabled(true);
     const newMessage = { message, sender: "user" };
     setMessageHistory((prev) => [...prev, newMessage]);
@@ -41,7 +46,6 @@ export default function Page() {
         const { done, value } = await reader.read();
         if (done) break;
         result += decoder.decode(value, { stream: true });
-        // setResponseMessage(result);
         const responseMessage = { message: result, sender: "assistant" };
         setMessageHistory((prev) => {
           if (prev.length > 0 && prev[prev.length - 1].sender === "assistant") {
@@ -95,6 +99,7 @@ export default function Page() {
               }}
               disabled={isInputDisabled}
               className="flex-1 p-2 text-black"
+              ref={inputRef}
             />
             <button 
               onClick={isInputDisabled ? handleGenerationPause : (message.trim() !== "" ? handleSubmit : undefined)} 
