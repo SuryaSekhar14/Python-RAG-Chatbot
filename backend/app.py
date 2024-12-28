@@ -84,7 +84,7 @@ def chat():
     def stream_response():
         try:
             messages = [
-                {"role": "system", "content": f"Use the following context for answering: {context}"},
+                {"role": "system", "content": f"You are a very helpful chat assistant. Use the following context for answering: {context}"},
                 {"role": "system", "content": f"You have access to the previous messages in this conversation, please use it when it is required: {str(message_history)}. Make sure to always align your answers with the context."},
                 {"role": "user", "content": query}
             ]
