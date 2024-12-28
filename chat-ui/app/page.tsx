@@ -15,10 +15,21 @@ export default function Page() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const storedHistory = localStorage.getItem("messageHistory");
+    if (storedHistory) {
+      setMessageHistory(JSON.parse(storedHistory));
+    }
+  }, []);
+
+  useEffect(() => {
     if (!isInputDisabled && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isInputDisabled]);
+
+  useEffect(() => {
+    localStorage.setItem("messageHistory", JSON.stringify(messageHistory));
+  }, [messageHistory]);
 
   const handleSubmit = async () => {
     setIsInputDisabled(true);

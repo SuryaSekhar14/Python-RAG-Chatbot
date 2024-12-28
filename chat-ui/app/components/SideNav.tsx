@@ -122,7 +122,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
                         input.click();
                     }}
                 >
-                    Upload Document for RAG
+                    Upload Document
                 </button>
                 <button 
                     className="text-white py-2 px-4 rounded-md bg-[#3a3a3a] hover:bg-[#4a4a4a]"
