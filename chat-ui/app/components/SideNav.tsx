@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import NewChatModal from './NewChatModal';
+import Toast from './Toast';
+
 
 interface SideNavProps {
     handleClearChat: () => void;
@@ -9,6 +11,7 @@ interface SideNavProps {
 
 const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
+    const [showToast, setShowToast] = useState(false);
 
     const handleNewChat = () => {
         setIsNewChatModalOpen(true);
@@ -23,6 +26,13 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
         handleClearChat();
         setIsNewChatModalOpen(false);
     };
+
+    const handleShowToast = () => {
+        setShowToast(true);
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
+      };
 
     return (
         <div className="flex flex-col w-96 h-full bg-[#1a1a1a] p-4">
@@ -120,7 +130,15 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
                 >
                     New Chat
                 </button>
-                <button className="text-white py-2 px-4 rounded-md bg-[#3a3a3a] hover:bg-[#4a4a4a]">API Key</button>
+                <button 
+                    className="text-white py-2 px-4 rounded-md bg-[#3a3a3a] hover:bg-[#4a4a4a]"
+                    onClick={handleShowToast}
+                    >
+                    API Key
+                </button>
+                {showToast && (
+                    <Toast message="I got you covered :)" type="info" />
+                )}
             </div>
 
             <NewChatModal 
