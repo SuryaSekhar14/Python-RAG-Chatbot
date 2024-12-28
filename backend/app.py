@@ -10,30 +10,31 @@ import faiss
 import dotenv
 from openai import OpenAI
 
-dotenv.load_dotenv()
 
-# Flask app setup
+dotenv.load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
-# OpenAI API key setup
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 if not OPENAI_API_KEY:
     raise ValueError("OpenAI API key not found in environment variables.")
 
-# Initialize embeddings and LLM
+
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 client = OpenAI()
-
-# Initialize vector_db as None initially
 vector_db = None
+
+
+@app.route('/')
+def index():
+    return "Healthy!", 200
 
 
 @app.route('/upload-file', methods=['POST'])
 def upload_file():
     global vector_db
 
-    # Check if a file is part of the request
     if 'file' not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
@@ -42,15 +43,13 @@ def upload_file():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
 
-    # Load the PDF into a temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_file:
         file.save(temp_file.name)
         loader = PyPDFLoader(temp_file.name)
         documents = loader.load()
 
-    # Create a new FAISS index or add to the existing one
     if vector_db is None:
-        vector_db = FAISS.from_documents(documents, embeddings)  # Removed the index argument
+        vector_db = FAISS.from_documents(documents, embeddings)
     else:
         vector_db.add_documents(documents)
 
@@ -75,7 +74,6 @@ def chat():
     if vector_db is None:
         return jsonify({"error": "Vector database is empty. Please upload files first."}), 400
 
-    # Search the vector database for relevant context
     results = vector_db.similarity_search(query, k=3)
     context = " ".join([doc.page_content for doc in results])
 
