@@ -31,6 +31,15 @@ def index():
     return "Healthy!", 200
 
 
+@app.route('/clear-db', methods=['GET'])
+def clear_db():
+    global vector_db
+    if vector_db is not None:
+        vector_db.clear()
+        vector_db = None
+    return jsonify({"message": "Vector database has been cleared"}), 200
+
+
 @app.route('/upload-file', methods=['POST'])
 def upload_file():
     global vector_db
