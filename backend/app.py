@@ -35,8 +35,8 @@ def index():
 def clear_db():
     global vector_db
     if vector_db is not None:
-        vector_db.clear()
         vector_db = None
+        
     return jsonify({"message": "Vector database has been cleared"}), 200
 
 
