@@ -40,7 +40,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
                 <h1 className="text-2xl text-white">Chatbot</h1>
             </div>
 
-            <div className="border-b border-gray-600 mt-5"></div>
+            <div className="border-b border-gray-600 mt-4"></div>
 
             <div className="flex-grow"></div>
             <div className="flex flex-col space-y-2">
@@ -142,7 +142,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
             </div>
 
             <NewChatModal 
-                isOpen={isNewChatModalOpen} 
+                isOpen={isNewChatModalOpen}
                 onCancel={handleCloseNewChatModal} 
                 onConfirm={handleCreateNewChat} 
             />
