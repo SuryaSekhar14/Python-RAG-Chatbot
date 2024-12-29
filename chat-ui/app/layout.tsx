@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chatbot",
+  title: "RAG Chatbot",
   description: "RAG-Chatbot",
-  
 };
 
 export default function RootLayout({
