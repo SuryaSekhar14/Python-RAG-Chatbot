@@ -96,7 +96,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
                                 updateProgress();
 
                                 try {
-                                    const response = await fetch('http://localhost:8000/upload-file', {
+                                    const response = await fetch('https://permian.surya.dev/upload-file', {
                                         method: 'POST',
                                         body: formData,
                                     });
