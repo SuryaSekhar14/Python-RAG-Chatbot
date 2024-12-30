@@ -12,7 +12,7 @@ interface SideNavProps {
 
 const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
-    // const [showToast, setShowToast] = useState(false);
+    const [showToast, setShowToast] = useState(false);
 
     const handleNewChat = () => {
         setIsNewChatModalOpen(true);
