@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import NewChatModal from './NewChatModal';
-import Toast from './Toast';
+// import Toast from './Toast';
+import APIKeyPrompt from './APIKeyPrompt';
 
 
 interface SideNavProps {
@@ -11,7 +12,7 @@ interface SideNavProps {
 
 const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
-    const [showToast, setShowToast] = useState(false);
+    // const [showToast, setShowToast] = useState(false);
 
     const handleNewChat = () => {
         setIsNewChatModalOpen(true);
@@ -130,15 +131,8 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
                 >
                     New Chat
                 </button>
-                <button 
-                    className="text-white py-2 px-4 rounded-md bg-[#3a3a3a] hover:bg-[#4a4a4a]"
-                    onClick={handleShowToast}
-                    >
-                    API Key
-                </button>
-                {showToast && (
-                    <Toast message="I got you covered :)" type="info" />
-                )}
+
+                <APIKeyPrompt />
             </div>
 
             <NewChatModal 
@@ -146,6 +140,8 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
                 onCancel={handleCloseNewChatModal} 
                 onConfirm={handleCreateNewChat} 
             />
+
+            
         </div>
     );
 };
