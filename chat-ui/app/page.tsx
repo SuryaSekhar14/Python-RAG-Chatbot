@@ -11,6 +11,7 @@ export default function Page() {
   const [message, setMessage] = useState("");
   const [messageHistory, setMessageHistory] = useState<{ message: string; sender: string }[]>([]);
   const [isInputDisabled, setIsInputDisabled] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -89,15 +90,19 @@ export default function Page() {
     setMessageHistory((prev) => [...prev, { message: `File uploaded successfully: ${filename}`, sender: "system" }]);
   }
 
+  const handleCollapseSidebar = () => {
+    setIsCollapsed((prev) => !prev);
+  }
+
   return (
     <div className="flex flex-row h-screen">
 
       {/* SideNav */}
-      <SideNav handleClearChat={handleClearChat} handleSuccessfulFileUpload={handleSuccessfulFileUpload} />
+      <SideNav handleClearChat={handleClearChat} handleSuccessfulFileUpload={handleSuccessfulFileUpload} isCollapsed={isCollapsed} />
 
       {/* Main Area */}
       <div className="flex flex-col items-center justify-center min-h-screen p-b-2 w-full h-full bg-[#333333]">
-        <MainNav />
+        <MainNav handleCollapseSidebar={handleCollapseSidebar} />
         <ChatArea messageHistory={messageHistory} />
         
         {/* ChatInput */}
