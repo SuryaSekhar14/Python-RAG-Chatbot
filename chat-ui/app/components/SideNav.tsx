@@ -7,9 +7,10 @@ import Toast from './Toast';
 
 interface SideNavProps {
     handleClearChat: () => void;
+    handleSuccessfulFileUpload: (filename: string) => void;
 }
 
-const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
+const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFileUpload }) => {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
     const [showToast, setShowToast] = useState(false);
 
@@ -103,6 +104,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
 
                                     if (response.ok) {
                                         console.log('PDF uploaded successfully');
+                                        handleSuccessfulFileUpload(file.name);
                                         loadingBar.style.width = '100%';
                                         loadingText.innerText = 'Upload Complete';
                                         setTimeout(() => {

@@ -85,11 +85,15 @@ export default function Page() {
     setMessageHistory([]);
   }
 
+  const handleSuccessfulFileUpload = (filename: string) => {
+    setMessageHistory((prev) => [...prev, { message: `File uploaded successfully: ${filename}`, sender: "system" }]);
+  }
+
   return (
     <div className="flex flex-row h-screen">
 
       {/* SideNav */}
-      <SideNav handleClearChat={handleClearChat} />
+      <SideNav handleClearChat={handleClearChat} handleSuccessfulFileUpload={handleSuccessfulFileUpload} />
 
       {/* Main Area */}
       <div className="flex flex-col items-center justify-center min-h-screen p-b-2 w-full h-full bg-[#333333]">
