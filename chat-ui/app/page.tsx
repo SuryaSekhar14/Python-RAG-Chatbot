@@ -37,13 +37,18 @@ export default function Page() {
     setMessageHistory((prev) => [...prev, newMessage]);
     setMessage("");
   
-    const response = await fetch("https://permian.surya.dev/api/chat", {
+    const apiKey = localStorage.getItem("apiKey");
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+      "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query: message, history: messageHistory }),
+      body: JSON.stringify({ query: message, history: messageHistory, api_key: apiKey }),
     });
+
+    if (response.status === 401) {
+
+    }
   
     if (response.ok && response.body) {
       const reader = response.body.getReader();

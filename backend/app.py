@@ -8,7 +8,7 @@ import os
 import tempfile
 import faiss
 import dotenv
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 
 
 dotenv.load_dotenv()
@@ -16,13 +16,13 @@ app = Flask(__name__)
 CORS(app)
 
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-if not OPENAI_API_KEY:
+OPENAI_API_KEY_1 = os.getenv("OPENAI_API_KEY_1")
+if not OPENAI_API_KEY_1:
     raise ValueError("OpenAI API key not found in environment variables.")
 
 
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-client = OpenAI()
+embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY_1)
+# client = OpenAI()
 vector_db = None 
 
 
@@ -71,16 +71,21 @@ def chat():
     global vector_db
 
     data = request.json
+    print(data)
+
     if not data or 'query' not in data:
         return jsonify({"error": "Missing 'query' in request body"}), 400
-    
-    # print(data)
 
     query = data['query']
     try:
         message_history = data['history']
     except KeyError:
         message_history = []
+
+    try:
+        api_key = data['api_key']
+    except KeyError:
+        api_key = "None"
 
     if vector_db is not None:
         results = vector_db.similarity_search(query, k=3)
@@ -98,7 +103,7 @@ def chat():
                 {"role": "user", "content": query}
             ]
 
-            # print(messages)
+            client = OpenAI(api_key=api_key)
 
             stream = client.chat.completions.create(
                 model="gpt-4o-mini",
@@ -109,7 +114,12 @@ def chat():
             for chunk in stream:
                 if chunk.choices[0].delta.content is not None:
                     yield chunk.choices[0].delta.content
+
+        except AuthenticationError as e:
+            yield f"Auth Error: Please provide a valid API key. \n\n You can set the API Key using the button in the Side Navigation Bar."
+
         except Exception as e:
+            # print(e)
             yield f"Error: {str(e)}"
 
     return Response(stream_response(), content_type="text/event-stream")
