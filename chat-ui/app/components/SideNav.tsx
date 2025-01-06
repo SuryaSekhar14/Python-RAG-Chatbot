@@ -12,7 +12,7 @@ interface SideNavProps {
 
 const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
-    const [showToast, setShowToast] = useState(false);
+    // const [showToast, setShowToast] = useState(false);
 
     const handleNewChat = () => {
         setIsNewChatModalOpen(true);
@@ -28,12 +28,12 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat }) => {
         setIsNewChatModalOpen(false);
     };
 
-    const handleShowToast = () => {
-        setShowToast(true);
-        setTimeout(() => {
-            setShowToast(false);
-        }, 3000);
-      };
+    // const handleShowToast = () => {
+    //     setShowToast(true);
+    //     setTimeout(() => {
+    //         setShowToast(false);
+    //     }, 3000);
+    //   };
 
     return (
         <div className="flex flex-col w-96 h-full bg-[#1a1a1a] p-4">
