@@ -5,6 +5,7 @@ import NewChatModal from './NewChatModal';
 import Toast from './Toast';
 import ChatHistory from './ChatHistory';
 import { FaUpload, FaPlus, FaKey, FaBars, FaTimes, FaCheck } from 'react-icons/fa';
+import { useAuth } from "@clerk/nextjs";
 
 interface SideNavProps {
     handleClearChat: () => void;
@@ -19,6 +20,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
     const [toastType, setToastType] = useState<'info' | 'success' | 'error'>('info');
     const [showApiKeyInput, setShowApiKeyInput] = useState(false);
     const [apiKey, setApiKey] = useState('');
+    const { getToken } = useAuth();
 
     useEffect(() => {
         // Load the API key from local storage on component mount
@@ -138,9 +140,13 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
                 updateProgress();
 
                 try {
-                    const response = await fetch('https://permian.surya.dev/upload-file', {
+                    const token = await getToken();
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload-file`, {
                         method: 'POST',
                         body: formData,
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        }
                     });
 
                     if (response.ok) {
@@ -151,6 +157,14 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
                         setTimeout(() => {
                             document.body.removeChild(loadingBarContainer);
                         }, 800);
+                    } else if (response.status === 401) {
+                        console.error('Unauthorized: Authentication failed');
+                        loadingText.innerText = 'Authentication Failed';
+                        loadingText.style.color = 'var(--destructive)';
+                        setTimeout(() => {
+                            document.body.removeChild(loadingBarContainer);
+                        }, 1500);
+                        handleShowToast("Authentication failed. Please sign in or provide a valid API key.", "error");
                     } else {
                         console.error('Failed to upload PDF');
                         loadingText.innerText = 'Upload Failed';

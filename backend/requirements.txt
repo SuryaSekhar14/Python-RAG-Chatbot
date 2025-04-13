@@ -24,10 +24,10 @@ Jinja2==3.1.6
 jiter==0.8.2
 jsonpatch==1.33
 jsonpointer==3.0.0
-langchain==0.3.13
-langchain-community==0.3.13
-langchain-core==0.3.28
-langchain-openai==0.2.14
+langchain==0.1.12
+langchain-community==0.0.29
+langchain-core==0.1.31
+langchain-openai==0.0.8
 langchain-text-splitters==0.3.4
 langsmith==0.2.6
 MarkupSafe==3.0.2
@@ -39,7 +39,7 @@ openai==1.58.1
 orjson==3.10.12
 packaging==24.2
 propcache==0.2.1
-pydantic==2.10.4
+pydantic==1.10.13
 pydantic-settings==2.7.0
 pydantic_core==2.27.2
 pypdf==5.1.0

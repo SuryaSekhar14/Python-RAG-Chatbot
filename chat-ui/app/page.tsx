@@ -6,6 +6,7 @@ import SideNav from "./components/SideNav";
 import MainNav from "./components/MainNav";
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { FaStopCircle } from "react-icons/fa";
+import { useAuth, useSession } from "@clerk/nextjs";
 
 export default function Page() {
   const [message, setMessage] = useState("");
@@ -14,7 +15,9 @@ export default function Page() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const { isSignedIn } = useAuth();
+  const { session } = useSession();
+  
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Toggle sidebar with Cmd/Ctrl+B
@@ -51,10 +54,13 @@ export default function Page() {
     setMessageHistory((prev) => [...prev, newMessage]);
     setMessage("");
   
-    const response = await fetch("https://permian.surya.dev/api/chat", {
+    const token = session ? await session.getToken() : null;
+    
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        ...(token ? { "Authorization": `Bearer ${token}` } : {})
       },
       body: JSON.stringify({ query: message, history: messageHistory }),
     });
@@ -83,8 +89,12 @@ export default function Page() {
   
       const finalResponseMessage = { message: result, sender: "assistant" };
       setMessageHistory((prev) => [...prev.slice(0, -1), finalResponseMessage]);
+    } else if (response.status === 401) {
+      console.error("Unauthorized: Authentication failed");
+      setMessageHistory((prev) => [...prev, { message: "Error: Authentication failed. Please sign in or provide a valid API key in the sidebar.", sender: "system" }]);
     } else {
       console.error("Failed to send message");
+      setMessageHistory((prev) => [...prev, { message: "Error: Failed to send message. Please try again.", sender: "system" }]);
     }
     setIsInputDisabled(false);
   };

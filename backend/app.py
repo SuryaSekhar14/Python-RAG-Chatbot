@@ -9,6 +9,8 @@ import tempfile
 import faiss
 import dotenv
 from openai import OpenAI
+from clerk_backend_api import Clerk
+from clerk_backend_api.jwks_helpers import authenticate_request, AuthenticateRequestOptions
 
 
 dotenv.load_dotenv()
@@ -24,6 +26,19 @@ if not OPENAI_API_KEY:
 embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
 client = OpenAI()
 vector_db = None 
+
+
+
+
+def is_signed_in(request):
+    sdk = Clerk(bearer_auth=os.getenv('CLERK_SECRET_KEY'))
+    request_state = sdk.authenticate_request(
+        request,
+        AuthenticateRequestOptions(
+            authorized_parties=['http://localhost:3000']
+        )
+    )
+    return request_state.is_signed_in
 
 
 @app.route('/')
@@ -43,6 +58,9 @@ def clear_db():
 @app.route('/upload-file', methods=['POST'])
 def upload_file():
     global vector_db
+
+    if not is_signed_in(request):
+        return jsonify({"error": "Unauthorized"}), 401
 
     if 'file' not in request.files:
         return jsonify({"error": "No file provided"}), 400
@@ -69,6 +87,9 @@ def upload_file():
 @app.route('/api/chat', methods=['POST'])
 def chat():
     global vector_db
+
+    if not is_signed_in(request):
+        return jsonify({"error": "Unauthorized"}), 401
 
     data = request.json
     if not data or 'query' not in data:
