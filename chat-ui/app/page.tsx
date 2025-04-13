@@ -16,6 +16,19 @@ export default function Page() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Toggle sidebar with Cmd/Ctrl+B
+      if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+        e.preventDefault();
+        setIsCollapsed(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
     const storedHistory = localStorage.getItem("messageHistory");
     if (storedHistory) {
       setMessageHistory(JSON.parse(storedHistory));

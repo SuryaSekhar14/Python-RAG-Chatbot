@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import NewChatModal from './NewChatModal';
 import Toast from './Toast';
+import ChatHistory from './ChatHistory';
 import { FaUpload, FaPlus, FaKey, FaBars, FaTimes, FaCheck } from 'react-icons/fa';
 
 interface SideNavProps {
@@ -172,7 +173,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
     };
 
     return (
-        <div className={`side-nav ${isCollapsed ? 'w-16' : 'w-80'}`}>
+        <div className={`side-nav ${isCollapsed ? 'w-0' : 'w-80'}`}>
             <div className="flex items-center justify-center p-4 border-b border-border h-16">
                 {isCollapsed ? (
                     <FaBars className="text-2xl" />
@@ -182,9 +183,11 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
             </div>
 
             <div className="flex-grow p-4 overflow-y-auto">
-                {!isCollapsed && (
+                {isCollapsed ? (
+                    <ChatHistory isCollapsed={isCollapsed} />
+                ) : (
                     <div className="space-y-1">
-                        {/* Chat history would go here */}
+                        <ChatHistory isCollapsed={isCollapsed} />
                     </div>
                 )}
             </div>
