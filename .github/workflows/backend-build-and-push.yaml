@@ -27,6 +27,7 @@ jobs:
         run: |
           touch backend/.env
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> backend/.env
+          echo "CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}" >> backend/.env
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
