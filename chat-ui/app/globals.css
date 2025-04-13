@@ -5,12 +5,42 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #1f2937;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --accent: #f3f4f6;
+  --accent-foreground: #1f2937;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary-hover: #e5e7eb;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary: #3b82f6;
+    --primary-foreground: #ffffff;
+    --secondary: #1f2937;
+    --secondary-foreground: #f9fafb;
+    --muted: #1f2937;
+    --muted-foreground: #9ca3af;
+    --accent: #1f2937;
+    --accent-foreground: #f9fafb;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #374151;
+    --input: #374151;
+    --ring: #3b82f6;
+    --primary-hover: #2563eb;
+    --secondary-hover: #374151;
   }
 }
 
@@ -18,4 +48,34 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  .chat-bubble-user {
+    @apply bg-primary text-primary-foreground rounded-lg p-3 max-w-[90%] break-words;
+  }
+
+  .chat-bubble-assistant {
+    @apply bg-secondary text-secondary-foreground rounded-lg p-3 max-w-[90%] break-words;
+  }
+
+  .chat-input {
+    @apply flex w-full border-2 border-input focus-within:ring-2 focus-within:ring-ring focus-within:border-primary rounded-lg overflow-hidden bg-background text-foreground;
+  }
+  
+  .side-nav {
+    @apply flex flex-col h-full bg-secondary text-secondary-foreground transition-all duration-300;
+  }
+  
+  .btn {
+    @apply px-4 py-2 rounded-md transition-colors;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-[var(--primary-hover)];
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-[var(--secondary-hover)];
+  }
 }

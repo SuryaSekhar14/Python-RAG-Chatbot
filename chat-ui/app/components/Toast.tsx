@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaInfoCircle, FaCheckCircle, FaExclamationTriangle, FaTimesCircle } from 'react-icons/fa';
 
 interface ToastProps {
   message: string;
@@ -15,27 +16,29 @@ const Toast: React.FC<ToastProps> = ({ message, type = 'info', duration = 3000 }
     }, duration);
 
     return () => clearTimeout(timer);
-  });
+  }, [duration]);
 
-  const toastClasses = `
-    p-4
-    rounded-md
-    shadow-md
-    text-white
-    ${
-      type === 'success'
-        ? 'bg-green-500'
-        : type === 'error'
-        ? 'bg-red-500'
-        : type === 'warning'
-        ? 'bg-yellow-500'
-        : 'bg-blue-500' 
+  const getIcon = () => {
+    switch (type) {
+      case 'success':
+        return <FaCheckCircle className="text-green-500" />;
+      case 'error':
+        return <FaTimesCircle className="text-destructive" />;
+      case 'warning':
+        return <FaExclamationTriangle className="text-amber-500" />;
+      default:
+        return <FaInfoCircle className="text-primary" />;
     }
-  `;
+  };
 
   return (
-    <div className={`fixed bottom-5 right-5 ${show ? 'opacity-100' : 'opacity-0'}`}>
-      <div className={toastClasses}>{message}</div>
+    <div 
+      className={`fixed bottom-5 right-5 transition-opacity duration-300 z-50 ${show ? 'opacity-100' : 'opacity-0'}`}
+    >
+      <div className="flex items-center gap-3 p-4 rounded-lg shadow-lg bg-secondary border border-border">
+        <div className="text-xl">{getIcon()}</div>
+        <div>{message}</div>
+      </div>
     </div>
   );
 };

@@ -101,13 +101,13 @@ export default function Page() {
       <SideNav handleClearChat={handleClearChat} handleSuccessfulFileUpload={handleSuccessfulFileUpload} isCollapsed={isCollapsed} />
 
       {/* Main Area */}
-      <div className="flex flex-col items-center justify-center min-h-screen p-b-2 w-full h-full bg-[#333333]">
+      <div className="flex flex-col items-center justify-center min-h-screen w-full h-full bg-background">
         <MainNav handleCollapseSidebar={handleCollapseSidebar} />
         <ChatArea messageHistory={messageHistory} />
         
         {/* ChatInput */}
-        <div className="flex w-full px-3 mt-auto py-5">
-          <div className="flex flex-1 border-2 border-gray-300 rounded-md overflow-hidden">
+        <div className="w-full px-4 py-4 mt-auto border-t border-border">
+          <div className="chat-input">
             <input
               type="text"
               value={message}
@@ -118,19 +118,20 @@ export default function Page() {
                 }
               }}
               disabled={isInputDisabled}
-              className="flex-1 p-2 text-black"
+              className="flex-1 p-3 bg-transparent outline-none form-input border-0 focus:ring-0"
+              placeholder="Type your message..."
               ref={inputRef}
             />
             <button 
               onClick={isInputDisabled ? handleGenerationPause : (message.trim() !== "" ? handleSubmit : undefined)} 
-              className="p-2 bg-white text-black"
+              className={`p-3 flex items-center justify-center ${isInputDisabled ? 'text-destructive hover:text-red-500' : 'text-primary hover:text-blue-600'}`}
               disabled={message.trim() === "" && !isInputDisabled}
+              aria-label={isInputDisabled ? "Stop generation" : "Send message"}
             >
-              { isInputDisabled ? <FaStopCircle className="w-6 h-6" /> : <FaCircleArrowUp className="w-6 h-6" /> }
+              { isInputDisabled ? <FaStopCircle className="w-5 h-5" /> : <FaCircleArrowUp className="w-5 h-5" /> }
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );
