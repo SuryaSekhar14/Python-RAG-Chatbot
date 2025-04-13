@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NewChatModal from './NewChatModal';
 import Toast from './Toast';
-import { FaUpload, FaPlus, FaKey, FaBars } from 'react-icons/fa';
+import { FaUpload, FaPlus, FaKey, FaBars, FaTimes, FaCheck } from 'react-icons/fa';
 
 interface SideNavProps {
     handleClearChat: () => void;
@@ -14,6 +14,18 @@ interface SideNavProps {
 const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFileUpload, isCollapsed }) => {
     const [isNewChatModalOpen, setIsNewChatModalOpen] = useState(false);
     const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastType, setToastType] = useState<'info' | 'success' | 'error'>('info');
+    const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+    const [apiKey, setApiKey] = useState('');
+
+    useEffect(() => {
+        // Load the API key from local storage on component mount
+        const savedApiKey = localStorage.getItem('chatbot_api_key');
+        if (savedApiKey) {
+            setApiKey(savedApiKey);
+        }
+    }, []);
 
     const handleNewChat = () => {
         setIsNewChatModalOpen(true);
@@ -29,11 +41,38 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
         setIsNewChatModalOpen(false);
     };
 
-    const handleShowToast = () => {
+    const handleShowToast = (message: string, type: 'info' | 'success' | 'error') => {
+        setToastMessage(message);
+        setToastType(type);
         setShowToast(true);
         setTimeout(() => {
             setShowToast(false);
         }, 3000);
+    };
+
+    const handleApiKeyButtonClick = () => {
+        setShowApiKeyInput(true);
+    };
+
+    const handleApiKeyCancel = () => {
+        setShowApiKeyInput(false);
+        // Reset to the value from localStorage
+        const savedApiKey = localStorage.getItem('chatbot_api_key') || '';
+        setApiKey(savedApiKey);
+    };
+
+    const handleApiKeyConfirm = () => {
+        if (apiKey.trim()) {
+            localStorage.setItem('chatbot_api_key', apiKey);
+            setShowApiKeyInput(false);
+            handleShowToast('API Key saved successfully', 'success');
+        } else {
+            handleShowToast('Please enter a valid API Key', 'error');
+        }
+    };
+
+    const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setApiKey(e.target.value);
     };
 
     const handleUploadDocument = async () => {
@@ -179,24 +218,52 @@ const SideNav: React.FC<SideNavProps> = ({ handleClearChat, handleSuccessfulFile
                         </>
                     )}
                 </button>
-                <button
-                    className={`btn ${isCollapsed ? 'p-3' : 'btn-primary'} w-full flex items-center justify-center`}
-                    onClick={handleShowToast}
-                    title="API Key"
-                >
-                    {isCollapsed ? (
-                        <FaKey />
-                    ) : (
-                        <>
-                            <FaKey className="mr-2" />
-                            API Key
-                        </>
-                    )}
-                </button>
+                
+                {showApiKeyInput && !isCollapsed ? (
+                    <div className="flex items-center">
+                        <input
+                            type="text"
+                            value={apiKey}
+                            onChange={handleApiKeyChange}
+                            placeholder="Enter API Key"
+                            className="flex-grow px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-primary text-sm text-black"
+                            autoFocus
+                        />
+                        <button 
+                            onClick={handleApiKeyCancel}
+                            className="p-2 text-destructive hover:bg-destructive/10 rounded"
+                            title="Cancel"
+                        >
+                            <FaTimes />
+                        </button>
+                        <button 
+                            onClick={handleApiKeyConfirm}
+                            className="p-2 text-success hover:bg-success/10 rounded"
+                            title="Confirm"
+                        >
+                            <FaCheck />
+                        </button>
+                    </div>
+                ) : (
+                    <button
+                        className={`btn ${isCollapsed ? 'p-3' : 'btn-primary'} w-full flex items-center justify-center`}
+                        onClick={handleApiKeyButtonClick}
+                        title="API Key"
+                    >
+                        {isCollapsed ? (
+                            <FaKey />
+                        ) : (
+                            <>
+                                <FaKey className="mr-2" />
+                                API Key
+                            </>
+                        )}
+                    </button>
+                )}
             </div>
 
             {showToast && (
-                <Toast message="I got you covered :)" type="info" />
+                <Toast message={toastMessage} type={toastType} />
             )}
 
             <NewChatModal
