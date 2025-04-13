@@ -7,6 +7,7 @@ import MainNav from "./components/MainNav";
 import { FaCircleArrowUp } from 'react-icons/fa6';
 import { FaStopCircle } from "react-icons/fa";
 import { useAuth, useSession } from "@clerk/nextjs";
+import Toast from "./components/Toast";
 
 export default function Page() {
   const [message, setMessage] = useState("");
@@ -14,6 +15,9 @@ export default function Page() {
   const [isInputDisabled, setIsInputDisabled] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastType, setToastType] = useState<"info" | "success" | "error" | "warning">("info");
   const inputRef = useRef<HTMLInputElement>(null);
   const { isSignedIn } = useAuth();
   const { session } = useSession();
@@ -47,6 +51,16 @@ export default function Page() {
   useEffect(() => {
     localStorage.setItem("messageHistory", JSON.stringify(messageHistory));
   }, [messageHistory]);
+
+  const handleShowToast = (message: string, type: "info" | "success" | "error" | "warning") => {
+    setToastMessage(message);
+    setToastType(type);
+    setShowToast(true);
+    
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
 
   const handleSubmit = async () => {
     setIsInputDisabled(true);
@@ -91,10 +105,10 @@ export default function Page() {
       setMessageHistory((prev) => [...prev.slice(0, -1), finalResponseMessage]);
     } else if (response.status === 401) {
       console.error("Unauthorized: Authentication failed");
-      setMessageHistory((prev) => [...prev, { message: "Error: Authentication failed. Please sign in or provide a valid API key in the sidebar.", sender: "system" }]);
+      handleShowToast("Authentication failed. Please sign in.", "error");
     } else {
       console.error("Failed to send message");
-      setMessageHistory((prev) => [...prev, { message: "Error: Failed to send message. Please try again.", sender: "system" }]);
+       
     }
     setIsInputDisabled(false);
   };
@@ -155,6 +169,8 @@ export default function Page() {
             </button>
           </div>
         </div>
+        
+        {showToast && <Toast message={toastMessage} type={toastType} />}
       </div>
     </div>
   );

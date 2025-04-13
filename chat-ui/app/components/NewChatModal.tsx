@@ -28,8 +28,8 @@ const NewChatModal: React.FC<NewChatModalProps> = ({ isOpen, onConfirm, onCancel
   };
 
   return (
-    <div 
-      className="fixed inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50 animate-fade-in" 
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm z-50 animate-fade-in"
       onClick={handleBackgroundClick}
     >
       <div className="flex flex-col p-6 w-80 rounded-lg shadow-lg bg-background border border-border animate-slide-in">
@@ -38,15 +38,15 @@ const NewChatModal: React.FC<NewChatModalProps> = ({ isOpen, onConfirm, onCancel
           This will clear your current conversation history.
         </p>
         <div className="flex justify-center space-x-4">
-          <button 
-            onClick={onCancel} 
+          <button
+            onClick={onCancel}
             className="btn px-4 py-2 rounded-md border border-border hover:bg-secondary flex items-center"
           >
             <FaTimes className="mr-2" />
             Cancel
           </button>
-          <button 
-            onClick={onConfirm} 
+          <button
+            onClick={onConfirm}
             className="btn btn-primary px-4 py-2 rounded-md flex items-center"
           >
             <FaCheck className="mr-2" />
