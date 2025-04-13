@@ -35,7 +35,7 @@ def is_signed_in(request):
     request_state = sdk.authenticate_request(
         request,
         AuthenticateRequestOptions(
-            authorized_parties=['http://localhost:3000']
+            authorized_parties=['http://localhost:3000', 'https://rag-chatbot.surya.dev']
         )
     )
     return request_state.is_signed_in
