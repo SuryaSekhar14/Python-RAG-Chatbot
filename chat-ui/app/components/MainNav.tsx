@@ -1,6 +1,5 @@
 import React from 'react'
 import { FaUserCircle } from 'react-icons/fa'
-import { GoSidebarCollapse } from "react-icons/go";
 import { RiMenuFoldLine, RiMenuUnfoldLine } from "react-icons/ri";
 
 interface MainNavProps {

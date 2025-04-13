@@ -8,8 +8,6 @@ interface NewChatModalProps {
 }
 
 const NewChatModal: React.FC<NewChatModalProps> = ({ isOpen, onConfirm, onCancel }) => {
-  if (!isOpen) return null;
-
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -20,6 +18,8 @@ const NewChatModal: React.FC<NewChatModalProps> = ({ isOpen, onConfirm, onCancel
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [onCancel]);
+
+  if (!isOpen) return null;
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {

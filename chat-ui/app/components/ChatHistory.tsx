@@ -9,6 +9,11 @@ interface ChatHistoryProps {
 const ChatHistory: React.FC<ChatHistoryProps> = ({ isCollapsed }) => {
   // Mock data for UI only
   const chatSessions = [
+    { id: 1, title: 'Chat about Python basics', timestamp: '2 hours ago' },
+    { id: 2, title: 'Machine Learning questions', timestamp: 'Yesterday' },
+    { id: 3, title: 'Web development tips', timestamp: '3 days ago' },
+    { id: 4, title: 'Data visualization help', timestamp: 'Last week' },
+    { id: 5, title: 'SQL query assistance', timestamp: 'Last week' },
   ];
 
   if (isCollapsed) {
